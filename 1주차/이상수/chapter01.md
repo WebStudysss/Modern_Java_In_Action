@@ -267,8 +267,7 @@ default void sort(Comparator<? super E> c) {
         }
     }
 ```
-
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/063bb2d1-ee4b-4cdf-a8cb-3612352a6b48/3cb7b415-d52a-4c7b-b669-9289b9a4e4f3/Untitled.png)
+![image](https://github.com/JTStudys/Modern_Java_In_Action/assets/75903442/4744b1ba-9838-4575-864e-0940e3dfca76)
 
 인터페이스에 sort메서드를 추가하는 방법도 있겠지만, 이를 넣는다면 List인터페이스를 상속하는 모든 코드에 sort의 세부 구현을 우리가 해야한다.
 
