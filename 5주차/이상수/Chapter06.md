@@ -59,10 +59,11 @@ collect메서드를 통해 Collector 인터페이스를 사용하는데, groupin
 ```java
 Comparator<Dish> dishCaloriesComparator = Comparator.comparingInt(Dish::getCalories);
 
-Optional<Dish> mostCalorieDish = menu.stream()
-																		 .collect(
-																				 Collectors.maxBy(dishCaloriesComparator)
-																			);
+Optional<Dish> mostCalorieDish =
+menu.stream()
+	.collect(
+		Collectors.maxBy(dishCaloriesComparator)
+	);
 ```
 
 - Optional반환
@@ -78,9 +79,9 @@ Optional<Dish> mostCalorieDish = menu.stream()
 
 ```java
 IntSummaryStatistics menuStatistics = menu.stream()
-																					.collect(
-																							Collectors.summarizingInt(Dish::getCalories)
-																					);
+					  .collect(
+					  	Collectors.summarizingInt(Dish::getCalories)
+					  );
 ```
 
 ### Collectors.joining - 문자열 연결
@@ -95,16 +96,16 @@ IntSummaryStatistics menuStatistics = menu.stream()
 ```java
 <인수가 3개인 reducing>
 int totalCalories = menu.stream()
-												.collect(Collectors.reducing(
-														0, Dish::getCalories, (i, j) -> i + j)
-												);
+			.collect(Collectors.reducing(
+				0, Dish::getCalories, (i, j) -> i + j)
+			);
 
 <인수가 1개인 reducing>
 Optional<Dish> mostCalorieDish = menu.stream()
-																		 .collect(Collectors.reducing(
-																					(d1, d2) ->
-																					d1.getCalories() > d2.getCalories() ? d1 : d2)
-																		 );
+				     .collect(Collectors.reducing(
+				     	(d1, d2) ->
+				     		d1.getCalories() > d2.getCalories() ? d1 : d2)
+				     );
 ```
 
 - reducing에 들어가는 인수 3개
@@ -133,21 +134,19 @@ but 위에서 말했던 collect와 reduce처럼 용도에 맞는 형식으로 �
 ```java
 <Type 기준으로 분류>
 Map<Dish.Type, List<Dish>> dishesByType = menu.stream()
-																							.collect(
-																									Collectors.groupingBy(Dish::getType)
-																							);
+					      .collect(Collectors.groupingBy(Dish::getType));
 
 <조건 기준 분류>
 public enum CaloricLevel { DIET, NORMAL, FAT }
 
-Map<CaloricLevel, List<Dish>> dishesByCaloricLevel
-									= menu.stream()
-												.collect(
-													groupingBy( dish -> {
-														if (dish.getCalories() <= 400) return CaloricLevel.DIET;
-														else if (dish.getCalories() <= 700) return CaloricLevel.NORMAL;
-														else return CaloricLevel.FAT;
-													}));
+Map<CaloricLevel, List<Dish>> dishesByCaloricLevel =
+menu.stream()
+	.collect(
+		groupingBy( dish -> {
+				if (dish.getCalories() <= 400) return CaloricLevel.DIET;
+				else if (dish.getCalories() <= 700) return CaloricLevel.NORMAL;
+				else return CaloricLevel.FAT;
+			}));
 ```
 
 - Dish.Type.values()을 통해 키값이 생성된다고 생각하면 되고, 이를 **분류 함수(classification function)**라고 부른다.
@@ -163,30 +162,28 @@ Map<CaloricLevel, List<Dish>> dishesByCaloricLevel
 
 ```java
 Map<Dish.Type, List<Dish>> caloricDishesByType = 
-		menu.stream()
-				.collect(groupingBy(Dish::getType,
-										Collectors.filtering(dish -> dish.getCalories() > 500, toList())));
+menu.stream()
+	.collect(groupingBy(Dish::getType,
+		Collectors.filtering(dish -> dish.getCalories() > 500, toList())));
 ```
 
 ### Collectors.mapping
 
 ```java
 Map<Dish.Type, List<Dish>> caloricDishesByType = 
-		menu.stream()
-				.collect(groupingBy(Dish::getType, mapping(Dish:getName, toList())));
+menu.stream()
+	.collect(groupingBy(Dish::getType, mapping(Dish:getName, toList())));
 ```
 
 ### Collectors.flatMapping
 
 ```java
 Map<Dish.Type, List<Dish>> caloricDishesByType = 
-		menu.stream()
-				.collect(groupingBy(Dish::getType,
-										flatMapping(dish -> dishTags.get(dish.getName()).stream,
-																																toSet()
-															)
-										)
-								);
+menu.stream()
+.collect(groupingBy(
+		Dish::getType,
+		flatMapping(dish -> dishTags.get(dish.getName()).stream,
+		toSet())));
 ```
 
 ### 컬렉터 결과를 다른 형식에 적용하기
@@ -195,8 +192,8 @@ Optional같은 반환타입이 들어왔을 때 해당 값이 있다는 것을 �
 
 ```java
 .collect(groupingBy(Dish::getType, -> 분류함수
-										collectingAndThen(maxBy(comparingInt(Dish::getCalories)), -> 컬렉터래핑
-										Optional::Get))); -> 변환함수
+	collectingAndThen(maxBy(comparingInt(Dish::getCalories)), -> 컬렉터래핑
+	Optional::Get))); -> 변환함수
 ```
 
 ### 컬렉션 형식을 바꾸는 방법
@@ -214,11 +211,12 @@ toCollection(HashSet::new); → TreeSet등 변환이 가능
     - 다중 맵으로 필터링할 수 있음
     
     ```java
-    Map<Boolean, Map<Dish.Type, List<Dish>>> vegetarianDishesByType = menu.stream()
-    											.collect(partitioningBy(
-    																								Dish::isVegetarian, ->true false
-    																								groupingBy(Dish::getType)->Type별로 또 나눔
-    																							));
+    Map<Boolean, Map<Dish.Type, List<Dish>>> vegetarianDishesByType =
+    menu.stream()
+    	.collect(partitioningBy(
+    	Dish::isVegetarian, ->true false
+    	groupingBy(Dish::getType)->Type별로 또 나눔
+    ));
     ```
     
 
