@@ -35,8 +35,8 @@
     List<Menu> menu ...
     
     List<String> dishNames = menu.stream()
-    														.map(Dish::getName)
-    														.collect(toList());
+    				 .map(Dish::getName)
+    				 .collect(toList());
     => Stream<Menu> -> .map(Dish::getName) -> Stream<String>
     ```
     
@@ -46,7 +46,7 @@
     ```java
     words.stream()
     		.map(word -> word.split(""))//각 단어를 개별 문자를 포함하는 배열로 변환
-    																//Stream<String[]> or Stream<Stream<String>>
+    					    //Stream<String[]> or Stream<Stream<String>>
     		.map(Arrays::stream) //String[]배열을 stream으로 감싸기
     		.distinct()
     		.collect(toList());
@@ -55,7 +55,7 @@
     words.stream()
     		.map(word -> word.split(""))
     		.flatMap(Arrays::stream) // flatMap을 통해 만들어진 Stream<Stream<String>>을
-    														//Stream<String>으로 평면화
+    					//Stream<String>으로 평면화
     		.distinct()
     		.collect(toList());
     ```
@@ -119,7 +119,7 @@ for(int x : numbers){
 ->
 
 int sum = numbers.stream()
-								.reduce(0, (a, b) -> a + b);
+		 .reduce(0, (a, b) -> a + b);
 ```
 
 - **초깃값(identity)** 0
